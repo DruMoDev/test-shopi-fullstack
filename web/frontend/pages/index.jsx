@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import {
@@ -14,11 +14,16 @@ import {
 } from "@shopify/polaris";
 
 export default function HomePage() {
-  const [summary, setSummary] = useState({ products: 0, collections: 0 });
+  const [summary, setSummary] = useState({
+    products: 0,
+    customers: 0,
+    orders: 0,
+  });
 
   const shopify = useAppBridge();
 
-  const { data, isLoading } = useQuery({
+  const { data: products, isLoading: isLoadingProducts } = useQuery({
+    queryKey: ["products"],
     queryFn: async () => {
       const response = await fetch("/api/status");
 
@@ -26,13 +31,40 @@ export default function HomePage() {
     },
   });
 
-  useEffect(() => {
-    if (!isLoading && data) setSummary(data);
-  }, [isLoading, data]);
+  const { data: customers, isLoading: isLoadingCustomers } = useQuery({
+    queryKey: ["customers"],
+    queryFn: async () => {
+      const response = await fetch("/api/customers");
+
+      return await response.json();
+    },
+  });
+
+  const { data: orders, isLoading: isLoadingOrders } = useQuery({
+    queryKey: ["orders"],
+    queryFn: async () => {
+      const response = await fetch("/api/orders");
+
+      return await response.json();
+    },
+  });
 
   useEffect(() => {
-    shopify.loading(isLoading);
-  }, [isLoading]);
+    if (!isLoadingProducts && products) setSummary({ ...summary, ...products });
+  }, [isLoadingProducts, products]);
+
+  useEffect(() => {
+    if (!isLoadingCustomers && customers)
+      setSummary({ ...summary, ...customers });
+  }, [isLoadingCustomers, customers]);
+
+  useEffect(() => {
+    if (!isLoadingOrders && orders) setSummary({ ...summary, ...orders });
+  }, [isLoadingOrders, orders]);
+
+  useEffect(() => {
+    shopify.loading(isLoadingProducts || isLoadingCustomers || isLoadingOrders);
+  }, [isLoadingProducts, isLoadingCustomers, isLoadingOrders]);
 
   return (
     <Page title="Integration status" narrowWidth>
@@ -46,7 +78,7 @@ export default function HomePage() {
                 </Text>
                 <InlineStack gap="200">
                   <Text>{summary.products}</Text>
-                  {isLoading ? (
+                  {isLoadingProducts ? (
                     <Spinner size="small" />
                   ) : (
                     <Badge progress="complete" size="small" tone="success">
@@ -63,8 +95,26 @@ export default function HomePage() {
                   Customers
                 </Text>
                 <InlineStack gap="200">
-                  <Text>0</Text>
-                  {isLoading ? (
+                  <Text>{summary.customers}</Text>
+                  {isLoadingCustomers ? (
+                    <Spinner size="small" />
+                  ) : (
+                    <Badge progress="complete" size="small" tone="success">
+                      Done
+                    </Badge>
+                  )}
+                </InlineStack>
+              </InlineStack>
+            </Box>
+            <Divider />
+            <Box padding="300">
+              <InlineStack align="space-between">
+                <Text as="p" variant="headingMd">
+                  Orders
+                </Text>
+                <InlineStack gap="200">
+                  <Text>{summary.orders}</Text>
+                  {isLoadingOrders ? (
                     <Spinner size="small" />
                   ) : (
                     <Badge progress="complete" size="small" tone="success">

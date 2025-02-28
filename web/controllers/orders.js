@@ -1,18 +1,19 @@
 import { shopify } from "../core/index.js";
 
-const PRODUCTS_COUNT = `{
-  productsCount {
+const ORDERS_COUNT = `{
+  ordersCount(limit: 1000) {
     count
+    precision
   }
 }`;
 
-export const statusController = {
+export const ordersController = {
   /**
    * @param {import("express").Request} req
    * @param {import("express").Response} res
    * @description Retrieve a summary of the integration status
    */
-  async summary(req, res) {
+  async orders(req, res) {
     try {
       const {
         locals: {
@@ -24,11 +25,11 @@ export const statusController = {
 
       const {
         data: {
-          productsCount: { count: products },
+          ordersCount: { count: orders },
         },
-      } = await client.request(PRODUCTS_COUNT);
+      } = await client.request(ORDERS_COUNT);
 
-      res.status(200).json({ products });
+      res.status(200).json({ orders });
     } catch (error) {
       console.error(error);
 
