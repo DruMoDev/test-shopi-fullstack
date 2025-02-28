@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "0e74c31fcd6afbf9a73e9f23554429b7"
-application_url = "https://indexes-flex-class-processors.trycloudflare.com"
+application_url = "https://blow-monitor-against-struggle.trycloudflare.com"
 embedded = true
 name = "fantasticfy-test1"
 handle = "fantasticfy-test1-1"
@@ -19,9 +19,9 @@ scopes = "write_products,write_shipping,read_customers,read_orders"
 
 [auth]
 redirect_urls = [
-  "https://indexes-flex-class-processors.trycloudflare.com/auth/callback",
-  "https://indexes-flex-class-processors.trycloudflare.com/auth/shopify/callback",
-  "https://indexes-flex-class-processors.trycloudflare.com/api/auth/callback"
+  "https://blow-monitor-against-struggle.trycloudflare.com/auth/callback",
+  "https://blow-monitor-against-struggle.trycloudflare.com/auth/shopify/callback",
+  "https://blow-monitor-against-struggle.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]

@@ -14,12 +14,12 @@ import { useMutation } from "react-query";
 
 export default function ERPSettings() {
   const [erpData, setErpData] = useState({
-    _id: "",
     ip: "",
     port: "",
     user: "",
     password: "",
   });
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleChange = useCallback((newValue, name) =>
     setErpData((prev) => ({ ...prev, [name]: newValue }), [])
@@ -34,34 +34,47 @@ export default function ERPSettings() {
         },
         body: JSON.stringify(data),
       });
-      if (response.status === 404) {
+      if (!response.ok) {
         throw new Error("Error al guardar el ERP");
       }
-      const result = await response.json();
-      return result;
+      if (response.ok) {
+        const result = await response.json();
+
+        alert(result.msg);
+        return result.user;
+      }
     },
   });
 
   const handleSubmit = async () => {
-    const res = await mutateAsync(erpData);
-    localStorage.setItem("erp", res.user._id);
+    try {
+      const res = await mutateAsync(erpData);
+      if (res?.user?._id) {
+        localStorage.setItem("erp", res.user._id);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
-    const getErpData = async (userId) => {
+    const getErpData = async () => {
+      const userId = localStorage.getItem("erp");
+
+      if (userId === "undefined" || !userId) return;
+
       const url = `/api/erp/${userId}`;
       const res = await fetch(url);
       if (res.status !== 200) {
         throw new Error("Error al obtener los ERP Data");
       }
       const data = await res.json();
-      setErpData({ ...erpData, data });
+      const newErp = { ...erpData, ...data };
+      setErpData(newErp);
     };
 
-    const userId = localStorage.getItem("erp");
-    if (userId) {
-      getErpData(userId);
-    }
+    // He hecho la persistencia con el localstorage por mantenerlo simple, pero deberiamos acceder con otros datos del usuario registrado
+    getErpData();
   }, []);
 
   return (
@@ -102,13 +115,13 @@ export default function ERPSettings() {
               />
               <InlineStack blockAlign="end" gap={"100"}>
                 <TextField
-                  type="password"
+                  type={passwordVisible ? "text" : "password"}
                   label="Password"
                   value={erpData.password}
                   onChange={(e) => handleChange(e, "password")}
                   autoComplete="password"
                 />
-                <Button>
+                <Button onClick={() => setPasswordVisible(!passwordVisible)}>
                   <Icon source={ViewIcon} />
                 </Button>
               </InlineStack>
