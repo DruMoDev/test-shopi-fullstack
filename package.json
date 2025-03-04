@@ -12,6 +12,7 @@
     "deploy": "shopify app deploy"
   },
   "dependencies": {
+    "@shopify/app-bridge-react": "^4.1.6",
     "@shopify/polaris": "^13.9.3"
   },
   "author": "alejandrofantasticfy",

@@ -7,8 +7,7 @@ export const erpController = {
     if (!id) {
       return res.status(403).json({ msg: "Falta el id del usuario" });
     }
-    console.log(id);
-    console.log(typeof id);
+    
 
     const userData = await Erp.findById({ _id: id });
 

@@ -11,6 +11,7 @@ import {
 import { useState, useCallback, useEffect } from "react";
 import { ViewIcon, HideIcon } from "@shopify/polaris-icons";
 import { useMutation } from "react-query";
+import { SaveBar, useAppBridge } from "@shopify/app-bridge-react";
 
 export default function ERPSettings() {
   const [erpData, setErpData] = useState({
@@ -21,9 +22,11 @@ export default function ERPSettings() {
   });
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const handleChange = useCallback((newValue, name) =>
-    setErpData((prev) => ({ ...prev, [name]: newValue }), [])
-  );
+  const bridge = useAppBridge();
+
+  const handleChange = useCallback((newValue, name) => {
+    setErpData((prev) => ({ ...prev, [name]: newValue }), []);
+  });
 
   const { mutateAsync } = useMutation({
     mutationFn: async (data) => {
@@ -39,18 +42,20 @@ export default function ERPSettings() {
       }
       if (response.ok) {
         const result = await response.json();
-
-        alert(result.msg);
+        bridge.toast.show("ERP credentials saved");
         return result.user;
       }
     },
   });
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       const res = await mutateAsync(erpData);
-      if (res?.user?._id) {
-        localStorage.setItem("erp", res.user._id);
+      console.log(res);
+
+      if (res) {
+        localStorage.setItem("erp", res._id);
       }
     } catch (error) {
       console.error(error);
@@ -82,51 +87,52 @@ export default function ERPSettings() {
       <Layout>
         <Card>
           <FormLayout>
-            <FormLayout.Group>
-              <TextField
-                label="IP"
-                value={erpData.ip}
-                name="ip"
-                onChange={(e) => handleChange(e, "ip")}
-                autoComplete="ip"
-                type="text"
-                clearButton
-                inputMode="numeric"
-              />
-              <TextField
-                label="Port"
-                value={erpData.port}
-                onChange={(e) => handleChange(e, "port")}
-                autoComplete="port"
-                type="text"
-                clearButton
-                inputMode="numeric"
-              />
-            </FormLayout.Group>
-
-            <FormLayout.Group>
-              <TextField
-                label="User"
-                value={erpData.user}
-                onChange={(e) => handleChange(e, "user")}
-                autoComplete="user"
-                type="text"
-                clearButton
-              />
-              <InlineStack blockAlign="end" gap={"100"}>
+            <form data-save-bar onSubmit={handleSubmit}>
+              <FormLayout.Group>
                 <TextField
-                  type={passwordVisible ? "text" : "password"}
-                  label="Password"
-                  value={erpData.password}
-                  onChange={(e) => handleChange(e, "password")}
-                  autoComplete="password"
+                  label="IP"
+                  value={erpData.ip}
+                  name="ip"
+                  onChange={(e) => handleChange(e, "ip")}
+                  autoComplete="ip"
+                  type="text"
+                  clearButton
+                  inputMode="numeric"
                 />
-                <Button onClick={() => setPasswordVisible(!passwordVisible)}>
-                  <Icon source={ViewIcon} />
-                </Button>
-              </InlineStack>
-            </FormLayout.Group>
-            <Button onClick={handleSubmit}>Guardar ERP</Button>
+                <TextField
+                  label="Port"
+                  value={erpData.port}
+                  onChange={(e) => handleChange(e, "port")}
+                  autoComplete="port"
+                  type="text"
+                  clearButton
+                  inputMode="numeric"
+                />
+              </FormLayout.Group>
+
+              <FormLayout.Group>
+                <TextField
+                  label="User"
+                  value={erpData.user}
+                  onChange={(e) => handleChange(e, "user")}
+                  autoComplete="user"
+                  type="text"
+                  clearButton
+                />
+                <InlineStack blockAlign="end" gap={"100"}>
+                  <TextField
+                    type={passwordVisible ? "text" : "password"}
+                    label="Password"
+                    value={erpData.password}
+                    onChange={(e) => handleChange(e, "password")}
+                    autoComplete="password"
+                  />
+                  <Button onClick={() => setPasswordVisible(!passwordVisible)}>
+                    <Icon source={passwordVisible ? HideIcon : ViewIcon} />
+                  </Button>
+                </InlineStack>
+              </FormLayout.Group>
+            </form>
           </FormLayout>
         </Card>
       </Layout>
