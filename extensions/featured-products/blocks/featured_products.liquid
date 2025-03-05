@@ -1,8 +1,37 @@
-{% comment %} Your code starts here {% endcomment %}
+<link
+rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+{% comment %} He cargado el global despues del swiper para aplicarle estilos {% endcomment %}
+{{ 'featured_products.css' | asset_url | stylesheet_tag }}
+
 <section id="featured-product-{{ block.id }}">
   {% comment %} block.settings object contains the settings you define in the schema object, you can access the settings values using the id as key, show example below {% endcomment %}
-  <h1>{{ block.settings.title }}</h1>
-  <p>test</p>
+  <h1 class="carito">{{ block.settings.title }}</h1>
+  
+  <section class="main-container">
+
+    <div class="left-section">
+      <div class="main-image">
+        <img src="{{ block.settings.main_image | img_url: 'master'}}" >
+      </div>
+      <div class="main-text">
+        <h2>{{ block.settings.main_title }}</h2>
+        <p>{{ block.settings.main_subtitle }}</p>
+      </div>
+    </div>
+
+    <div class="right-section ">
+      <div class="swiper">
+        <div class="swiper-wrapper">           
+        </div>          
+          <div class="swiper-pagination"> </div>          
+          <div class="swiper-button-prev"> </div>
+          <div class="swiper-button-next"> </div>
+       </div>
+    </div>
+  </section>
 </section>
 {% comment %} And ends here {% endcomment %}
 
@@ -19,7 +48,25 @@
       "label": "Title",
       "id": "title", // Use this to access the value in the block.settings object
       "default": "Featured products title"
+    },
+     {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Imagen Principal"    },
+    {
+      "type": "text",
+      "id": "main_title",
+      "label": "Título principal",
+      "default": "Título de ejemplo"
+    },
+    {
+      "type": "text",
+      "id": "main_subtitle",
+      "label": "Subtitulo principal",
+      "default": "Subtitulo de ejemplo"
     }
   ]
 }
 {% endschema %}
+
+{{ 'featured_products.js' | asset_url | script_tag }}

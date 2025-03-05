@@ -1,0 +1,136 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.main-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 600px;
+  margin: 0 auto;
+  gap: 20px;
+  max-width: 1200px;
+}
+
+.left-section,
+.right-section {
+  height: 500px;
+  overflow: hidden;
+}
+
+.left-section {
+  position: relative;
+  text-align: center;
+  column-span: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+  .main-image {
+    position: absolute;
+    padding: 10px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    min-height: 400px;
+    img {
+      border-radius: 10px;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .main-text {
+    z-index: 2;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    color: white;
+    h2 {
+      color: white;
+      font-size: 24px;
+      font-weight: 500;
+    }
+  }
+}
+.right-section {
+  background-color: #fff;
+  column-span: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  .swiper-content-products {
+    height: 30%;
+  }
+  .swiper-title-products {
+    font-size: 30px;
+    font-weight: 600;
+  }
+  .swiper-price-products {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .swiper-image-products {
+    width: 100%;
+    height: 70%;
+    object-fit: cover;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -999;
+    }
+  }
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.swiper-image-products img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+@media (min-width: 768px) {
+  .main-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  margin-top: 195px;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 16px;
+  color: black;
+}
+
+.swiper-pagination-bullet {
+  background-color: black;
+  opacity: 0.7;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: black;
+  opacity: 1;
+}

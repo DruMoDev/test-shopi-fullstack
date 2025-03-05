@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "0e74c31fcd6afbf9a73e9f23554429b7"
-application_url = "https://danish-flu-judge-breach.trycloudflare.com"
+application_url = "https://whenever-commonly-qatar-recipient.trycloudflare.com"
 embedded = true
 name = "fantasticfy-test1"
 handle = "fantasticfy-test1-1"
@@ -19,9 +19,9 @@ scopes = "write_products,write_shipping,read_customers,read_orders"
 
 [auth]
 redirect_urls = [
-  "https://danish-flu-judge-breach.trycloudflare.com/auth/callback",
-  "https://danish-flu-judge-breach.trycloudflare.com/auth/shopify/callback",
-  "https://danish-flu-judge-breach.trycloudflare.com/api/auth/callback"
+  "https://whenever-commonly-qatar-recipient.trycloudflare.com/auth/callback",
+  "https://whenever-commonly-qatar-recipient.trycloudflare.com/auth/shopify/callback",
+  "https://whenever-commonly-qatar-recipient.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
